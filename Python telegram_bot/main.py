@@ -19,28 +19,35 @@ dp = Dispatcher(bot)
 async def on_startup(_):
    print("Бот запущен")
 
-b1 = KeyboardButton("Чёрные_шутки")
-b2 = KeyboardButton("Мемы_в_картинках")
-b3 = KeyboardButton("Шутки_про_штирлица")
+
+b1 = KeyboardButton("🌚 Чёрные шутки 🌚")
+b2 = KeyboardButton("🔥 Мемы в картинках 🔥")
+b3 = KeyboardButton("👎 Шутки про штирлица 🤷‍♂️")
+# b4 = KeyboardButton("🤩 Добавить свою шутку 🤩")
 
 kb_client = ReplyKeyboardMarkup(resize_keyboard=True)
 kb_client.row(b1,b2,b3)
-
+# .add(b4)
 @dp.message_handler(commands=["start","help"])
 async def command_start(message : types.Message):
-      await message.answer("Выбери категорию: ",reply_markup=kb_client)
+   await message.answer(" 😝 Здарова холоп 😝 ")
+   await message.answer(" 🤡 Выбери категорию 🤡 ",reply_markup=kb_client)
 
-@dp.message_handler(text=["Чёрные_шутки", "Мемы_в_картинках", "Шутки_про_штирлица"])
+@dp.message_handler(text=["🌚 Чёрные шутки 🌚", "🔥 Мемы в картинках 🔥", "👎 Шутки про штирлица 🤷‍♂️"])
 async def jokes(message : types.Message):
-   if message.text == "Чёрные_шутки":
+   if message.text == "🌚 Чёрные шутки 🌚":
       await message.answer(random.choice(jokes_json['black_jokes']))
-   elif message.text == "Мемы_в_картинках":
+   elif message.text == "🔥 Мемы в картинках 🔥":
       await bot.send_photo(chat_id=message.chat.id, photo=random.choice(jokes_json['Memes_pic']))
-   elif message.text == "Шутки_про_штирлица":
+   elif message.text == "👎 Шутки про штирлица 🤷‍♂️":
       await message.answer(random.choice(jokes_json['stirlitz']))
+
+# @dp.message_handler(text=["🤩 Добавить свою шутку 🤩"])
+# async def command_add_joke(message : types.Message):
+#    await message.answer("Пиши шутку:")
 
 @dp.message_handler()
 async def jokes(message : types.Message):
-      await message.answer("Нет такой команды. Напиши /start ")
+      await message.answer("😡 Нет такой команды. Напиши /start")
 
 executor.start_polling(dp, skip_updates=True,on_startup=on_startup)
