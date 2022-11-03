@@ -14,8 +14,8 @@ parser()
 class FSMAdd_joke(StatesGroup):
    user_joke = State()
 
-class FSMAdmin(StatesGroup):
-   check_user_jokes = State()
+# class FSMAdmin(StatesGroup):
+#    check_user_jokes = State()
 
 bot = Bot(token=Bot_token)
 dp = Dispatcher(bot,storage=MemoryStorage())
@@ -30,9 +30,10 @@ b1 = KeyboardButton("🌚 Чёрные шутки 🌚")
 b2 = KeyboardButton("🔥 Мемы в картинках 🔥")
 b3 = KeyboardButton("✊ Шутки про штирлица 👊")
 b4 = KeyboardButton("🤩 Добавить свою шутку 🤩")
+b5 = KeyboardButton("😎 Шутки пользователей 😎") 
 
 kb_client = ReplyKeyboardMarkup(resize_keyboard=True)
-kb_client.row(b1,b2,b3).add(b4)
+kb_client.row(b1,b2,b3).add(b5).add(b4)
 
 @dp.message_handler(commands=["start","help"])
 async def command_start(message : types.Message):
@@ -60,23 +61,30 @@ async def stirlitz(message : types.Message):
    record = cur.fetchone()
    await message.answer(record[0])
 
-# 
-@dp.message_handler(commands=["admin"])
-async def command_admin(message : types.Message):
-   if message.chat.id == Admin:
-      print("🦄 Зашёл Создатель 🦄")
-      await message.answer("💪 Здаравия желаю, мой господин 🤝",reply_markup=ReplyKeyboardRemove())
-      await message.answer("Для модерации шуток пользователей напиши: /viewing_user_jokes")
-      await message.answer("Для того, чтобы узнать id фото: отправь мне фото")
-   else:
-      await message.answer("🖕 Катись отседава 🖕")
-
-@dp.message_handler(commands=["viewing_user_jokes"])
-async def viewing_user_jokes(message : types.Message):
+@dp.message_handler(text=["😎 Шутки пользователей 😎"])
+async def users_jokes(message : types.Message):
    cur.execute(f'''
    SELECT joke FROM users_jokes ORDER BY RANDOM() LIMIT 1;''')
    record = cur.fetchone()
    await message.answer(record[0])
+
+# 
+# @dp.message_handler(commands=["admin"])
+# async def command_admin(message : types.Message):
+#    if message.chat.id == Admin:
+#       print("🦄 Зашёл Создатель 🦄")
+#       await message.answer("💪 Здаравия желаю, мой господин 🤝",reply_markup=ReplyKeyboardRemove())
+#       await message.answer("Для модерации шуток пользователей напиши: /viewing_user_jokes")
+#       await message.answer("Для того, чтобы узнать id фото: отправь мне фото")
+#    else:
+#       await message.answer("🖕 Катись отседава 🖕")
+
+# @dp.message_handler(commands=["viewing_user_jokes"])
+# async def viewing_user_jokes(message : types.Message):
+#    cur.execute(f'''
+#    SELECT joke FROM users_jokes ORDER BY RANDOM() LIMIT 1;''')
+#    record = cur.fetchone()
+#    await message.answer(record[0])
 
 # 
 @dp.message_handler(text=["🤩 Добавить свою шутку 🤩"])
@@ -97,6 +105,7 @@ async def add_joke(message : types.Message, state:FSMContext):
       data["text"] = message.text
       data["chat_id"] = message.chat.id
    await add_user_joke(state)
+   await message.answer("🧠 Шутка успешно добавлена 🏆")
    await state.finish()
 
 # 
