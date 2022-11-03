@@ -66,7 +66,10 @@ async def users_jokes(message : types.Message):
    cur.execute(f'''
    SELECT joke FROM users_jokes ORDER BY RANDOM() LIMIT 1;''')
    record = cur.fetchone()
-   await message.answer(record[0])
+   if record:
+      await message.answer(record[0])
+   else:
+      await message.answer("Список шуток пуст :(")
 
 # 
 # @dp.message_handler(commands=["admin"])
