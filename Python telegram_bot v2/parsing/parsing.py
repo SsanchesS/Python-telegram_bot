@@ -94,6 +94,10 @@ def fill_db():
          INSERT INTO stirlitz (stirlitz_joke) VALUES ('{joke}');''')
          db.commit() 
       print("stirlitz добавлены")
+      cur.executescript(f'''
+         INSERT INTO users_jokes (joke) VALUES ('Девушка, можно вас на минутку?
+- Нет, у меня почасовой тариф.');''')
+      db.commit() 
       print("БД заполнена")
       cur.close()
       db.close()
